@@ -33,30 +33,47 @@ class Twit:
         recent_mention = self.api.mentions_timeline(count=1)
         return recent_mention[0]
 
-    # def get_user_replied_to(self):
-    #     user = self.recent_mention()
-    #     users_list = user.text.split()
-    #     return users_list[0]
-
     def get_mentioned_user(self):
         user = self.recent_mention()
+        user_mentioning_bot = user.user.screen_name
         users_list = user.text.split()
         if users_list[-1] == "@ratiocheck":
-            return users_list[0]
-        elif users_list[-1] != "@ratiocheck":
-            return users_list[-1]
+            return {
+                "user_mentioning_bot": user_mentioning_bot,
+                "user_to_check": users_list[0].replace("@", ""),
+            }
+        elif users_list[-1] != "@ratiocheck" and "@" in users_list[-1]:
+            return {
+                "user_mentioning_bot": user_mentioning_bot,
+                "user_to_check": users_list[-1].replace("@", ""),
+            }
+        else:
+            return {
+                "user_mentioning_bot": user_mentioning_bot,
+                "user_to_check": users_list[0].replace("@", ""),
+            }
 
     def get_users_tweets(self, user):
         return tweepy.Cursor(
             self.api.user_timeline,
             screen_name="Pessi_Grandpa",
             include_rts=False,
-            count=200,
+            count=5000,
             tweet_mode="extended",
-        ).items(200)
+        ).items(5000)
 
     def get_tweet(self, tweet_id):
-        return self.api.get_status(tweet_id)
+        try:
+            return {"success": True, "data": self.api.get_status(tweet_id)}
+        except:
+            return {"success": False, "data": ""}
 
-
-# initialize
+    def check_if_follows(self):
+        user = self.get_mentioned_user()
+        username = user["user_mentioning_bot"]
+        # print(username)
+        follows_data = self.api.get_friendship(target_screen_name=username)
+        return {
+            "user": follows_data[1].screen_name,
+            "follows_you": follows_data[0].followed_by,
+        }
