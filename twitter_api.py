@@ -21,20 +21,43 @@ months = [
 twit = Twit()
 
 # * MENTIONS
-user = twit.get_mentioned_user()
+user = twit.get_mentioned_in_tweet()
 
 # print(user)
 
 
-user2 = twit.get_latest_user_info()
-print(user2)
+user_info = twit.get_latest_user_info()
+
+print(user_info)
+
+hashtag = twit.get_hashtag()
+
+# if len(user["TWEET_MENTIONED_IN"].entities["hashtags"]) > 0:
+#     hashtag = user["TWEET_MENTIONED_IN"].entities["hashtags"][0]["text"]
+
+# ! SENDING DIRECT MESSAGE
+# if hashtag == "myratiostats":
+#     # send DM
+#     # * NEED USER ID
+#     # * SEND BACK USER'S RATIO STATS
+#     send_dm = twit.send_dm(
+#         user_id=user_info["user_id"], message="these are your ratio stats: RATIO!"
+#     )
+# print(send_dm)
+
+# print("HASSHHHHTAGGG: ", hashtag)
 
 
-send_dm = twit.send_dm(user_id=user2["user_id"], message="yo did you get this DM??")
-print(send_dm)
+# ligma = twit.get_user_stats()
+
+# print(ligma)
 
 
-# USER TAGS YOU AND SAYS #MyRatioStats
+# user2 = twit.get_latest_user_info()
+# print(user2)
+
+
+# * USER TAGS YOU AND SAYS #MyRatioStats
 # send them a DM with their ratio stats
 # their attempts
 # their successful ratio's

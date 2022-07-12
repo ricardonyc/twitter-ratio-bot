@@ -33,7 +33,7 @@ class Twit:
         recent_mention = self.api.mentions_timeline(count=1)
         return recent_mention[0]
 
-    def get_mentioned_user(self):
+    def get_mentioned_in_tweet(self):
         user = self.recent_mention()
         user_mentioning_bot = user.user.screen_name
         users_list = user.text.split()
@@ -41,22 +41,25 @@ class Twit:
             return {
                 "user_mentioning_bot": user_mentioning_bot,
                 "user_to_check": users_list[0].replace("@", ""),
+                "TWEET_MENTIONED_IN": user,
             }
         elif users_list[-1] != "@ratiocheck" and "@" in users_list[-1]:
             return {
                 "user_mentioning_bot": user_mentioning_bot,
                 "user_to_check": users_list[-1].replace("@", ""),
+                "TWEET_MENTIONED_IN": user,
             }
         else:
             return {
                 "user_mentioning_bot": user_mentioning_bot,
                 "user_to_check": users_list[0].replace("@", ""),
+                "TWEET_MENTIONED_IN": user,
             }
 
-    def get_users_tweets(self, user):
+    def get_users_tweets(self, username):
         return tweepy.Cursor(
             self.api.user_timeline,
-            screen_name="Pessi_Grandpa",
+            screen_name=username,
             include_rts=False,
             count=5000,
             tweet_mode="extended",
@@ -69,7 +72,7 @@ class Twit:
             return {"success": False, "data": ""}
 
     def check_if_follows(self):
-        user = self.get_mentioned_user()
+        user = self.get_mentioned_in_tweet()
         username = user["user_mentioning_bot"]
         # print(username)
         follows_data = self.api.get_friendship(target_screen_name=username)
@@ -79,9 +82,8 @@ class Twit:
         }
 
     def get_latest_user_info(self):
-        user_info = self.get_mentioned_user()
+        user_info = self.get_mentioned_in_tweet()
         all_user_data = self.api.get_user(screen_name=user_info["user_mentioning_bot"])
-        # return all_user_data.screen_name
         return {
             "user_id": all_user_data.id,
             "username": all_user_data.screen_name,
@@ -89,3 +91,19 @@ class Twit:
 
     def send_dm(self, user_id, message):
         return self.api.send_direct_message(recipient_id=user_id, text=message)
+
+    def get_user_stats(self):
+        user = self.get_mentioned_in_tweet()
+        username = user["user_mentioning_bot"]
+        return self.get_users_tweets(username=username)
+        # return username
+
+    def get_hashtag(self):
+        try:
+            user = self.get_mentioned_in_tweet()
+            return user["TWEET_MENTIONED_IN"].entities["hashtags"][0]["text"].lower()
+        except:
+            return False
+
+    def get_user_info(self):
+        pass
