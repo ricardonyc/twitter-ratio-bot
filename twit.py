@@ -2,7 +2,7 @@ import configparser
 import tweepy
 
 config = configparser.ConfigParser()
-config.read("config.ini")
+config.read("config/config.ini")
 
 
 class Twit:
@@ -77,3 +77,15 @@ class Twit:
             "user": follows_data[1].screen_name,
             "follows_you": follows_data[0].followed_by,
         }
+
+    def get_latest_user_info(self):
+        user_info = self.get_mentioned_user()
+        all_user_data = self.api.get_user(screen_name=user_info["user_mentioning_bot"])
+        # return all_user_data.screen_name
+        return {
+            "user_id": all_user_data.id,
+            "username": all_user_data.screen_name,
+        }
+
+    def send_dm(self, user_id, message):
+        return self.api.send_direct_message(recipient_id=user_id, text=message)

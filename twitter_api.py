@@ -25,7 +25,29 @@ user = twit.get_mentioned_user()
 
 # print(user)
 
-print(twit.check_if_follows())
+
+user2 = twit.get_latest_user_info()
+print(user2)
+
+
+send_dm = twit.send_dm(user_id=user2["user_id"], message="yo did you get this DM??")
+print(send_dm)
+
+
+# USER TAGS YOU AND SAYS #MyRatioStats
+# send them a DM with their ratio stats
+# their attempts
+# their successful ratio's
+# their percent success
+# measure their 'strenght of ratio's (attempts to success)
+# the higher the attempts and the more the success, the better!
+
+# follows_bot = twit.check_if_follows()["follows_you"]
+
+# if not follows_bot:
+#     # send the user that mentioned you a DM that they must follow the bot
+#     # for it to work
+#     print("user does not follow you!")
 
 
 # ! EACH TWEET HAS
