@@ -1,4 +1,10 @@
-# Python Twitter **Ratio** Bot
+#  Python Twitter **Ratio** Bot 
+<img align="left" alt="javascript logo" width="46px" style='padding: 10px 10px 0 0' src="icons/python.png" />
+<img align="left" alt="javascript logo" width="46px" style='padding: 10px 10px 0 0' src="icons/twitter.png" />
+<br>
+<br>
+<br>
+
 ### **What does "*Ratio*" mean on Twitter?**
 - A *ratio* happens when a user gets more likes on their tweet than the tweet they are replying to 
 - Ratio's are commonly used to display a dislike of a tweet
@@ -21,4 +27,3 @@
 ### **Why?**
 - A lot of times, there are people on Twitter that claim to be the ***"King of Ratio's"*** and this bot sets out to expose everyone's *ratio* success rate and stats
 - It's also fun to expose someone and their attempts at ***ratio'ing*** people
-
