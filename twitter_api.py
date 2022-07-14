@@ -74,12 +74,6 @@ def init():
     pass
 
 
-# #RATIOSTATS
-# check the mentions
-# if the mentions contains a hashtag, check the hashtag and if its correct,
-# respond to the user with a DM about their ratio stats
-# grab that user's ID and send that ID a DM with a message
-
 # ! CREATE A METHOD THAT TAKES IN THE USER_ID AND RETURNS ALL THEIR TWEET INFO
 
 
@@ -139,15 +133,6 @@ print(
 #         user_id=user_info["user_id"], message="these are your ratio stats: RATIO!"
 #     )
 # print(send_dm)
-
-
-# * USER TAGS YOU AND SAYS #MyRatioStats
-# send them a DM with their ratio stats
-# their attempts
-# their successful ratio's
-# their percent success
-# measure their 'strenght of ratio's (attempts to success)
-# the higher the attempts and the more the success, the better!
 
 
 # store_last_seen(FILE_NAME, tweet_id)
@@ -211,46 +196,3 @@ print(
 
 # df.to_csv("ratios.csv", encoding="utf-8")
 
-
-# ! CHECK IF THE USER RATIO'D SOMEONE BY REPLYING ONLY WITH '.'
-# strip method
-
-# ! CHECK IF USER MENTIONED SOMEONE AFTER YOU OR IF THEY JUST REPLIED TO SOMEONE
-# IF THEY JUST REPLIED TO SOMEONE, GET THE FIRST "@" THAT APPEARS IN THE LIST
-# IF THEY MENTIONED AN ACCOUNT AFTER MENTIONING YOU, SCAN THAT ACCOUNT
-# SCAN THE ACCOUNT AND THEIR REPLIES FOR THE WORD "RATIO" OR A SIMPLE "."
-# USE THE lower AND strip METHOD
-
-
-# * IDEA
-# CREATE DATAFRAME
-# STORE THE DETAILS OF EVERY USER IN WHICH U CHECK FOR THEIR RATIO STATS
-# RANK THE USERS BY SUCCESS PERCENTAGE %
-# USER WITH MOST ATTEMPTS AND MOST SUCCESS, IS CROWNED CURRENT RATIO KING
-# THE KING IS THEN ANNOUNCED IN A PINNED TWEET
-# IN THE TWEET, MENTION THEIR STATS LIKE ATTEMPTS AND SUCCESS RATE AND BIGGEST RATIO SO FAR AGAINST WHOOO???? AND DATE OF RATIO
-# ? HOW TO CALCULATE THE STRENGTH OF THEIR RECORD ? LIKE NFL STRENGTH OF SCHEDULE
-# scan their tweets and grab the highest ratio rate tweet and save it into the dataframe
-
-
-# --------------------------------------------------------------------------
-
-# check mentions
-# if someone ONLY tags you under a reply, get the INFO of the user that they replied
-# to
-# scan their account for their ratio stats and then reply to the comment that tagged
-# you with the @ of the comment that you were tagged under
-
-# if the mention contains the hashtag #myratiostats
-# check the user that mentioned you account and sum up their stats
-
-# create a function that sums up their stats
-
-
-# -------------------------------------------------------------------------
-# create an object of tweets / users DM you replied to
-# add a "replied" property and mark it "TRUE"
-
-# each time you reply to someone's tweet, save their TWEET ID
-# loop through the last 20 mentions
-# if the TWEET ID is found in the saved ID's list, dont respond to the tweet
