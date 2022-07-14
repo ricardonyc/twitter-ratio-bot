@@ -2,38 +2,133 @@ from twit import Twit
 import pandas
 import snscrape.modules.twitter as sntwitter
 import datetime
-
-months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-]
+from helper_functions import responding_comment, read_last_seen, store_last_seen
+import time
 
 twit = Twit()
 
-# * MENTIONS
-user = twit.get_mentioned_in_tweet()
+FILE_NAME = "last_seen.txt"
 
+
+def init():
+    user = twit.get_mentioned_in_tweet()
+    print("USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR: ", user)
+
+    if user["send_dm_stats"]:
+        # get ID of tweet
+        tweet_id = user["MOST_RECENT_TWEET_MENTIONED_IN"].id
+        pass
+
+    tweet_id = (
+        user["MOST_RECENT_TWEET_MENTIONED_IN"].in_reply_to_status_id
+        or user["MOST_RECENT_TWEET_MENTIONED_IN"].id
+    )
+    stored_id = read_last_seen(FILE_NAME)
+    if tweet_id == stored_id:
+        return
+    store_last_seen(FILE_NAME, tweet_id)
+    print("TWEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEET ID: ", tweet_id)
+    # * CHECK IF WE RESPONDED TO THE TWEET ALREADY
+
+    user_to_check = user["user_to_check"]
+    reply_to_username = user_to_check["screen_name"]
+    info = twit.get_user_info_by_username(username=reply_to_username)
+    ops_tweets = twit.get_users_tweets(username=user_to_check)
+
+    print("||")
+    print("||")
+    print(
+        "INFOOOOOOOOOOOOOOOOOOOOOOOOooooooooooooooooooooooooooooooOOOOOOOOOOOOO: ", info
+    )
+    print("||")
+    print("||")
+
+    hashtag = twit.get_hashtag()
+    print("HASSHHHHHHHHHHHHHHHHTTAGGgGGGGGGGGGGGG: ", hashtag)
+    if hashtag == "myratiostats":
+        # send DM
+        # * NEED USER ID
+        # * SEND BACK USER'S RATIO STATS
+        try:
+            recipient = user["user_mentioning_bot"]
+            print("RECIPIENTTTTTTTTTTTTTTTTTTTT: ", recipient)
+            response = twit.format_ratio_tweets(user_tweets=ops_tweets)
+            message = responding_comment(
+                user_to_check=recipient, ratio_stats_list=response
+            )
+            sent_dm = twit.send_dm(user_id=info.id, message=message)
+            print(sent_dm)
+            return
+        except:
+            twit.send_reply(
+                tweet_id=tweet_id,
+                reply_message="Sorry, couldn't send you a DM for some reason. Make sure your DM's are open and your page isn't private. You might have message requests turned off.",
+            )
+            return
+
+    store_last_seen(FILE_NAME, tweet_id)
+    users_ratio_stats = twit.format_ratio_tweets(user_tweets=ops_tweets)
+    responding_message = responding_comment(reply_to_username, users_ratio_stats)
+
+    twit.send_reply(tweet_id=tweet_id, reply_message=responding_message)
+    pass
+
+
+# #RATIOSTATS
+# check the mentions
+# if the mentions contains a hashtag, check the hashtag and if its correct,
+# respond to the user with a DM about their ratio stats
+# grab that user's ID and send that ID a DM with a message
+
+# ! CREATE A METHOD THAT TAKES IN THE USER_ID AND RETURNS ALL THEIR TWEET INFO
+
+
+# * MENTIONS
+# user = twit.get_mentioned_in_tweet()
+# print(user)
+# tweet_id = user["MOST_RECENT_TWEET_MENTIONED_IN"].in_reply_to_status_id
+# print(tweet_id)
+# print("USERRRRRRRRRRRRR: ", user)
 # print(user)
 
+# tweet_replying_to_id = user["in_reply_to_status_id"] or False
+# print(tweet_replying_to_id)
 
-user_info = twit.get_latest_user_info()
+# print(twit.get_mentioned_in_tweet())
 
-print(user_info)
 
-hashtag = twit.get_hashtag()
+# ! GET THE CURRENT TWEET'S ID
 
-# if len(user["TWEET_MENTIONED_IN"].entities["hashtags"]) > 0:
-#     hashtag = user["TWEET_MENTIONED_IN"].entities["hashtags"][0]["text"]
+
+# user_to_check = user["user_to_check"]
+# reply_to_username = user_to_check["screen_name"]
+# info = twit.get_user_info_by_username(username=reply_to_username)
+# print("INFOoooooooooooooooooooooooo: ", info.id)
+
+
+# ops_tweets = twit.get_users_tweets(username=user_to_check)
+
+init()
+
+
+print(
+    "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+)
+
+# ! USER THAT MENTIONED BOT
+# RETURNS THEIR USERNAME AND THEIR ID
+# user_info = twit.get_latest_user_info()
+# user_mentioning_bot_id = user_info["user_id"]
+# user_mentioning_bot2 = user_info["username"]
+# print(user_mentioning_bot_id)
+# print(user_mentioning_bot2)
+
+# print("USER----INFOOOOOOOOOOOOO: ", user_info)
+
+# hashtag = twit.get_hashtag()
+
+# print(hashtag)
+
 
 # ! SENDING DIRECT MESSAGE
 # if hashtag == "myratiostats":
@@ -45,17 +140,6 @@ hashtag = twit.get_hashtag()
 #     )
 # print(send_dm)
 
-# print("HASSHHHHTAGGG: ", hashtag)
-
-
-# ligma = twit.get_user_stats()
-
-# print(ligma)
-
-
-# user2 = twit.get_latest_user_info()
-# print(user2)
-
 
 # * USER TAGS YOU AND SAYS #MyRatioStats
 # send them a DM with their ratio stats
@@ -65,63 +149,62 @@ hashtag = twit.get_hashtag()
 # measure their 'strenght of ratio's (attempts to success)
 # the higher the attempts and the more the success, the better!
 
-# follows_bot = twit.check_if_follows()["follows_you"]
 
-# if not follows_bot:
-#     # send the user that mentioned you a DM that they must follow the bot
-#     # for it to work
-#     print("user does not follow you!")
+# store_last_seen(FILE_NAME, tweet_id)
 
 
-# ! EACH TWEET HAS
-# in_reply_to_screen_name - string
-# user_mentions - list
-# favorite_count - number
-# in_reply_to_status_id
-
-users_tweets = twit.get_users_tweets(user["user_to_check"])
-# print(users_tweets)
-
-tweets = []
+# users_ratio_stats = twit.format_ratio_tweets(user_tweets=ops_tweets)
 
 
-def convert_date(date_created):
-    date = str(date_created).split(" ")[0].split("-")
-    month = int(date[1]) - 1
-    return f"{months[month]} {date[-1]}, {date[0]}"
+# print(users_ratio_stats)
+
+# * ------------------------------------------------------------------------
+# * ------------------------------------------------------------------------
+# * ------------------------------------------------------------------------
+# while True:
+#     time.sleep(5)
+#     user = twit.get_mentioned_in_tweet()
+
+#     if not user["message"]:
+#         continue
+
+#     user_mentioning_bot = user["user_mentioning_bot"]
+#     user_to_check = user["user_to_check"]
+#     tweet_mentioned_in_info = user["MOST_RECENT_TWEET_MENTIONED_IN"]
+
+#     ops_tweets = twit.get_users_tweets(username=user_to_check)
+
+#     print(ops_tweets)
+#     # ! USER THAT MENTIONED BOT
+#     # RETURNS THEIR USERNAME AND THEIR ID
+#     most_recent_mention_user_info = twit.get_latest_user_info()
+#     recent_mention_user_id = most_recent_mention_user_info["user_id"]
+#     recent_mention_username = most_recent_mention_user_info["username"]
+#     # print(recent_mention_user_id)
+#     # print(recent_mention_username)
+
+#     hashtag = twit.get_hashtag()
+
+#     if not hashtag["hashtag_found"]:
+#         continue
+
+#     print(hashtag)
+
+#     users_ratio_stats = twit.format_ratio_tweets(user_tweets=ops_tweets)
+
+#     print(users_ratio_stats)
+#     print(responding_comment(user_to_check, users_ratio_stats))
+#     print("---------- BEFORE END OF WHILE LOOP ----------")
+#     print("---------- END OF WHILE LOOP ----------")
+# * ------------------------------------------------------------------------
+# * ------------------------------------------------------------------------
+# * ------------------------------------------------------------------------
 
 
-# GET REPLYING TO TWEET ID
-# CHECK GET THE LIKES OF THE TWEET
-# for tweet in users_tweets:
-#     if "ratio" in tweet.full_text.lower():
-#         tweet_replied_to = twit.get_tweet(tweet_id=tweet.in_reply_to_status_id)
+# responding_message = responding_comment(reply_to_username, users_ratio_stats)
+# print(responding_message)
 
-#         tweet_replied_to_likes = twit.get_tweet(tweet_id=tweet.in_reply_to_status_id)
-
-#         if tweet_replied_to["success"] and tweet_replied_to_likes["success"]:
-#             tweets.append(
-#                 {
-#                     "user_id": tweet.user.id,
-#                     "username": tweet.user.screen_name,
-#                     "date_of_tweet": convert_date(tweet.created_at),
-#                     "tweet_id": tweet.id,
-#                     "tweet": tweet.full_text,
-#                     "likes": tweet.favorite_count,
-#                     "replying_to_username": tweet.in_reply_to_screen_name or "",
-#                     "replying_to_user_id": tweet.in_reply_to_user_id or "",
-#                     "replying_to_tweet_id": tweet.in_reply_to_status_id or "",
-#                     "tweet_replied_to": tweet_replied_to["data"].text,
-#                     "tweet_replied_to_likes": tweet_replied_to_likes[
-#                         "data"
-#                     ].favorite_count,
-#                 }
-#             )
-
-
-# for tweet in tweets:
-#     print(tweet)
-
+# twit.send_reply(tweet_id=tweet_id, reply_message=responding_message)
 
 # df = pandas.DataFrame(tweets)
 # print(df)
@@ -147,3 +230,27 @@ def convert_date(date_created):
 # THE KING IS THEN ANNOUNCED IN A PINNED TWEET
 # IN THE TWEET, MENTION THEIR STATS LIKE ATTEMPTS AND SUCCESS RATE AND BIGGEST RATIO SO FAR AGAINST WHOOO???? AND DATE OF RATIO
 # ? HOW TO CALCULATE THE STRENGTH OF THEIR RECORD ? LIKE NFL STRENGTH OF SCHEDULE
+# scan their tweets and grab the highest ratio rate tweet and save it into the dataframe
+
+
+# --------------------------------------------------------------------------
+
+# check mentions
+# if someone ONLY tags you under a reply, get the INFO of the user that they replied
+# to
+# scan their account for their ratio stats and then reply to the comment that tagged
+# you with the @ of the comment that you were tagged under
+
+# if the mention contains the hashtag #myratiostats
+# check the user that mentioned you account and sum up their stats
+
+# create a function that sums up their stats
+
+
+# -------------------------------------------------------------------------
+# create an object of tweets / users DM you replied to
+# add a "replied" property and mark it "TRUE"
+
+# each time you reply to someone's tweet, save their TWEET ID
+# loop through the last 20 mentions
+# if the TWEET ID is found in the saved ID's list, dont respond to the tweet
