@@ -25,5 +25,4 @@
 - The bot will tweet when their is a new ***"King of ratio's"*** (based on attempts, success, and strength of ratio's overall) found and pin the tweet on the **@ratiocheck** profile
 
 ### **Why?**
-- A lot of times, there are people on Twitter that claim to be the ***"King of Ratio's"*** and this bot sets out to expose everyone's *ratio* success rate and stats
-- It's also fun to expose someone and their attempts at ***ratio'ing*** people
+- Because it's a fun and different project.
