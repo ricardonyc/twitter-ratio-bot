@@ -22,7 +22,7 @@
 
 ### **What does this bot do?**
 - When a user tags the bot **(@ratiocheck)** when replying to someone else's tweet, the bot will scan through all tweets of the user being replied to
-- The bot will tweet when their is a new ***"King of ratio's"*** (based on attempts, success, and strength of ratio's overall) found and pin the tweet on the **@ratiocheck** profile
+- More features to be added later
 
 ### **Why?**
 - Because it's a fun and different project.
