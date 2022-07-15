@@ -12,7 +12,6 @@ FILE_NAME = "last_seen.txt"
 
 def init():
     user = twit.get_mentioned_in_tweet()
-    print("USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR: ", user)
 
     if user["send_dm_stats"]:
         # get ID of tweet
@@ -27,7 +26,6 @@ def init():
     if tweet_id == stored_id:
         return
     store_last_seen(FILE_NAME, tweet_id)
-    print("TWEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEET ID: ", tweet_id)
     # * CHECK IF WE RESPONDED TO THE TWEET ALREADY
 
     user_to_check = user["user_to_check"]
@@ -35,16 +33,7 @@ def init():
     info = twit.get_user_info_by_username(username=reply_to_username)
     ops_tweets = twit.get_users_tweets(username=user_to_check)
 
-    print("||")
-    print("||")
-    print(
-        "INFOOOOOOOOOOOOOOOOOOOOOOOOooooooooooooooooooooooooooooooOOOOOOOOOOOOO: ", info
-    )
-    print("||")
-    print("||")
-
     hashtag = twit.get_hashtag()
-    print("HASSHHHHHHHHHHHHHHHHTTAGGgGGGGGGGGGGGG: ", hashtag)
     if hashtag == "myratiostats":
         # send DM
         # * NEED USER ID
@@ -74,34 +63,6 @@ def init():
     pass
 
 
-# ! CREATE A METHOD THAT TAKES IN THE USER_ID AND RETURNS ALL THEIR TWEET INFO
-
-
-# * MENTIONS
-# user = twit.get_mentioned_in_tweet()
-# print(user)
-# tweet_id = user["MOST_RECENT_TWEET_MENTIONED_IN"].in_reply_to_status_id
-# print(tweet_id)
-# print("USERRRRRRRRRRRRR: ", user)
-# print(user)
-
-# tweet_replying_to_id = user["in_reply_to_status_id"] or False
-# print(tweet_replying_to_id)
-
-# print(twit.get_mentioned_in_tweet())
-
-
-# ! GET THE CURRENT TWEET'S ID
-
-
-# user_to_check = user["user_to_check"]
-# reply_to_username = user_to_check["screen_name"]
-# info = twit.get_user_info_by_username(username=reply_to_username)
-# print("INFOoooooooooooooooooooooooo: ", info.id)
-
-
-# ops_tweets = twit.get_users_tweets(username=user_to_check)
-
 init()
 
 
@@ -117,22 +78,10 @@ print(
 # print(user_mentioning_bot_id)
 # print(user_mentioning_bot2)
 
-# print("USER----INFOOOOOOOOOOOOO: ", user_info)
 
 # hashtag = twit.get_hashtag()
 
 # print(hashtag)
-
-
-# ! SENDING DIRECT MESSAGE
-# if hashtag == "myratiostats":
-#     # send DM
-#     # * NEED USER ID
-#     # * SEND BACK USER'S RATIO STATS
-#     send_dm = twit.send_dm(
-#         user_id=user_info["user_id"], message="these are your ratio stats: RATIO!"
-#     )
-# print(send_dm)
 
 
 # store_last_seen(FILE_NAME, tweet_id)
@@ -190,9 +139,3 @@ print(
 # print(responding_message)
 
 # twit.send_reply(tweet_id=tweet_id, reply_message=responding_message)
-
-# df = pandas.DataFrame(tweets)
-# print(df)
-
-# df.to_csv("ratios.csv", encoding="utf-8")
-
