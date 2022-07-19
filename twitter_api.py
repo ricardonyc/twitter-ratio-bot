@@ -1,7 +1,5 @@
 from twit import Twit
-import pandas
 import snscrape.modules.twitter as sntwitter
-import datetime
 from helper_functions import responding_comment, read_last_seen, store_last_seen
 import time
 
@@ -12,8 +10,8 @@ FILE_NAME = "last_seen.txt"
 
 def init():
     user = twit.get_mentioned_in_tweet()
-    print("USERRRRRRRRRRRRRRRRRRRRR: ", user)
-    print(user["follows_you"])
+    # print("USERRRRRRRRrrrrrRRR: ", user)
+    # print(user["follows_you"])
 
     if not user["message"]:
         return
@@ -22,7 +20,7 @@ def init():
         return
 
     stored_id = read_last_seen(FILE_NAME)
-    print(user["id"], stored_id)
+    # print(user["id"], stored_id)
     if user["id"] == stored_id:
         print("same ID")
         return
@@ -47,7 +45,7 @@ def init():
     print(response)
 
     twit.send_reply(tweet_id=user["id"], reply_message=response)
-    print("a reply was sent!!!!!!!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<")
+    # print("a reply was sent!!!!!!!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<")
 
 
 while True:

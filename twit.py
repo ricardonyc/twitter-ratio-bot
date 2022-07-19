@@ -40,6 +40,7 @@ class Twit:
     def get_mentioned_in_tweet(self):
         user = self.recent_mention()
         user_mentioning_bot = user.user.screen_name
+        # print("USER: ", user.__dict__.keys())
         follows_you = self.check_if_follows(username=user_mentioning_bot)["follows_you"]
         if not follows_you:
             return {"follows_you": follows_you, "message": False}
