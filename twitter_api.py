@@ -24,7 +24,7 @@ def init():
     stored_id = read_last_seen(FILE_NAME)
     print(user["id"], stored_id)
     if user["id"] == stored_id:
-        print("SAMMEEEEEEEEEEEEEEEE IIIIIIIIDDDDDDD!!!!")
+        print("same ID")
         return
     else:
         store_last_seen(FILE_NAME, user["id"])
