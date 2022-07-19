@@ -12,12 +12,7 @@ FILE_NAME = "last_seen.txt"
 
 def init():
     user = twit.get_mentioned_in_tweet()
-
-    stored_id = read_last_seen(FILE_NAME)
-    if user["id"] == stored_id:
-        return
-    else:
-        store_last_seen(FILE_NAME, user["id"])
+    print(user)
 
     if not user["message"]:
         return
@@ -25,6 +20,15 @@ def init():
     if not user["follows_you"]:
         return
 
+    stored_id = read_last_seen(FILE_NAME)
+    print(user["id"], stored_id)
+    if user["id"] == stored_id:
+        print("SAMMEEEEEEEEEEEEEEEE IIIIIIIIDDDDDDD!!!!")
+        return
+    else:
+        store_last_seen(FILE_NAME, user["id"])
+
+    print("checking for hashtag")
     if user["hashtag"]:
         user_tweets = twit.get_users_tweets(username=user["username"])
         users_stats = twit.format_ratio_tweets(user_tweets=user_tweets)
@@ -42,12 +46,13 @@ def init():
     print(response)
 
     twit.send_reply(tweet_id=user["id"], reply_message=response)
-
+    print("a reply was sent!!!!!!!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<")
 
 # * ------------------------------------------------------------------------
 # * ------------------------------------------------------------------------
 # * ------------------------------------------------------------------------
 while True:
+    print("before init")
     init()
     print("init was fired off")
     time.sleep(65)
