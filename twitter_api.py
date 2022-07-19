@@ -12,7 +12,8 @@ FILE_NAME = "last_seen.txt"
 
 def init():
     user = twit.get_mentioned_in_tweet()
-    print(user)
+    print("USERRRRRRRRRRRRRRRRRRRRR: ", user)
+    print(user["follows_you"])
 
     if not user["message"]:
         return
@@ -48,15 +49,10 @@ def init():
     twit.send_reply(tweet_id=user["id"], reply_message=response)
     print("a reply was sent!!!!!!!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<")
 
-# * ------------------------------------------------------------------------
-# * ------------------------------------------------------------------------
-# * ------------------------------------------------------------------------
+
 while True:
     print("before init")
     init()
     print("init was fired off")
-    time.sleep(65)
-    print("yeet")
-# * ------------------------------------------------------------------------
-# * ------------------------------------------------------------------------
-# * ------------------------------------------------------------------------
+    time.sleep(120)
+    print("after sleep")

@@ -42,8 +42,9 @@ class Twit:
         user_mentioning_bot = user.user.screen_name
         follows_you = self.check_if_follows(username=user_mentioning_bot)["follows_you"]
         if not follows_you:
-            return {"follows_you": follows_you}
-        hashtags = [hashtag["text"] for hashtag in user.entities["hashtags"]]
+            return {"follows_you": follows_you, "message": False}
+        hashtags = [hashtag["text"].lower() for hashtag in user.entities["hashtags"]]
+        print(hashtags)
         users_list = user.entities["user_mentions"]
         if users_list[0]["screen_name"] == "ratiocheck" and "myratiostats" in hashtags:
             return {
