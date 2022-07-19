@@ -40,48 +40,33 @@ class Twit:
     def get_mentioned_in_tweet(self):
         user = self.recent_mention()
         user_mentioning_bot = user.user.screen_name
+        follows_you = self.check_if_follows(username=user_mentioning_bot)["follows_you"]
+        if not follows_you:
+            return {"follows_you": follows_you}
+        hashtags = [hashtag["text"] for hashtag in user.entities["hashtags"]]
         users_list = user.entities["user_mentions"]
-        print("USERS_LIST: ", users_list)
-        if users_list[0]["screen_name"] == "ratiocheck":
+        if users_list[0]["screen_name"] == "ratiocheck" and "myratiostats" in hashtags:
             return {
-                "message": "Probably someone replying to @ratiocheck bot",
-                "send_dm_stats": True,
-                "MOST_RECENT_TWEET_MENTIONED_IN": user,
-            }
-        elif users_list[-1] == "@ratiocheck":
-            return {
-                "user_mentioning_bot": user_mentioning_bot,
-                "user_to_check": users_list[0],
-                "tweet_replying_to_id": user.in_reply_to_status_id,
-                "MOST_RECENT_TWEET_MENTIONED_IN": user,
+                "id": user.user.id,
+                "hashtag": True,
+                "follows_you": follows_you,
+                "user_to_dm": user.user.id,
+                "username": user.user.screen_name,
                 "message": True,
             }
-        elif users_list[0] != "@ratiocheck":
+        elif users_list[0]["screen_name"] != "ratiocheck":
             return {
-                "user_mentioning_bot": user_mentioning_bot,
-                "user_to_check": users_list[0],
-                # ! PROBLEM HERE
-                "tweet_replying_to_id": user.in_reply_to_status_id,
-                "MOST_RECENT_TWEET_MENTIONED_IN": user,
+                "id": user.id,
+                "hashtag": False,
+                "data": {
+                    "user_mentioning_bot": user_mentioning_bot,
+                    "user_to_check": user.entities["user_mentions"][0]["screen_name"],
+                    "user_id": user.entities["user_mentions"][0]["id"],
+                    "respond_to_tweet_id": user.id,
+                },
+                "follows_you": follows_you,
                 "message": True,
             }
-        # elif users_list[-1] != "@ratiocheck" and "@" in users_list[-1]:
-        #     return {
-        #         "user_mentioning_bot": user_mentioning_bot,
-        #         "user_to_check": users_list[-1].replace("@", ""),
-        #         "tweet_replying_to_id": user.in_reply_to_status_id,
-        #         "MOST_RECENT_TWEET_MENTIONED_IN": user,
-        #     }
-        # IF THE FIRST USER MENTIONED IS @RATIOCHECK THEN IGNORE
-        # else:
-        #     return {
-        #         "user_mentioning_bot": user_mentioning_bot,
-        #         "user_to_check": users_list[0],
-        #         # ! PROBLEM HERE
-        #         "tweet_replying_to_id": user.in_reply_to_status_id,
-        #         "MOST_RECENT_TWEET_MENTIONED_IN": user,
-        #         "message": True,
-        #     }
         else:
             return {"message": False}
 
@@ -102,47 +87,14 @@ class Twit:
             return {"success": False, "data": ""}
 
     def check_if_follows(self, username):
-        # user = self.get_mentioned_in_tweet()
-        # username = user["user_mentioning_bot"]
-        # print(username)
         follows_data = self.api.get_friendship(target_screen_name=username)
         return {
             "user": follows_data[1].screen_name,
             "follows_you": follows_data[0].followed_by,
         }
 
-    def get_latest_user_info(self):
-        user_info = self.get_mentioned_in_tweet()
-        all_user_data = self.api.get_user(screen_name=user_info["user_mentioning_bot"])
-        return {
-            "user_id": all_user_data.id,
-            "username": all_user_data.screen_name,
-        }
-
     def send_dm(self, user_id, message):
         return self.api.send_direct_message(recipient_id=user_id, text=message)
-
-    # def get_user_stats(self):
-    #     user = self.get_mentioned_in_tweet()
-    #     username = user["user_mentioning_bot"]
-    #     return self.get_users_tweets(username=username)
-    # return username
-
-    def get_hashtag(self):
-        try:
-            user = self.get_mentioned_in_tweet()
-            hashtags = user["MOST_RECENT_TWEET_MENTIONED_IN"].entities["hashtags"]
-            for hashtag in hashtags:
-                if hashtag["text"].lower() == "myratiostats":
-                    return hashtag["text"]
-        except:
-            return {
-                "message": "#MyRatioStats hashtag not found",
-                "hashtag_found": False,
-            }
-
-    def get_user_info(self):
-        pass
 
     def format_ratio_tweets(self, user_tweets):
 
@@ -224,6 +176,3 @@ class Twit:
             in_reply_to_status_id=tweet_id,
             auto_populate_reply_metadata=True,
         )
-
-    def get_user_info_by_username(self, username):
-        return self.api.get_user(screen_name=username)
