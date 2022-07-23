@@ -24,5 +24,5 @@
         - When used this way, the bot will scan the user's account for all attempted ratio's and DM (direct message) the user with their attempted ratio's, successful ratio's, and the strength of their ratio's *(the higher the attempts and the highter their success, the higher their strength)*
 
 
-### **Why did you build this?**
+### **Why the heck did you build this?**
 - Simple. Because it was fun and felt like a different project.
