@@ -1,4 +1,4 @@
-#  Python Twitter **Ratio** Bot (In Progress)
+#  Python Twitter **Ratio** Bot (@RatioCheck)
 <img align="left" alt="javascript logo" width="46px" style='padding: 10px 10px 0 0' src="icons/python.png" />
 <img align="left" alt="javascript logo" width="46px" style='padding: 10px 10px 0 0' src="icons/twitter.png" />
 <br>
