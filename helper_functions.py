@@ -1,3 +1,5 @@
+# PARAMETERS: username, list of stats
+# returns a string
 def responding_comment(user_to_check, ratio_stats_list):
     attempts = "{:,}".format(ratio_stats_list["attempted_ratios"])
     success = "{:,}".format(ratio_stats_list["successful_ratios"])

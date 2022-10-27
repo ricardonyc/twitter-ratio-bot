@@ -9,26 +9,24 @@ FILE_NAME = "last_seen.txt"
 
 
 def init():
+    # checks what kind of mention it was (direct tweet or in a reply/comment)
     user = twit.get_mentioned_in_tweet()
-    # print("USERRRRRRRRrrrrrRRR: ", user)
-    # print(user["follows_you"])
 
-    if not user["message"]:
+    # if the user does not specifically mention bot OR does not follow, RETURN
+    if not user["message"] or not user["follows_you"]:
         return
 
-    if not user["follows_you"]:
-        return
-
+    # prevents bot from responding twice
     stored_id = read_last_seen(FILE_NAME)
-    # print(user["id"], stored_id)
     if user["id"] == stored_id:
-        print("same ID")
         return
+    # stores most recent reply so bot wont reply twice
     else:
         store_last_seen(FILE_NAME, user["id"])
 
-    print("checking for hashtag")
+    # makes sure user mentions bot AND the hashtag to send stats through direct messages
     if user["hashtag"]:
+        # get users tweets, format, then respond to tweet through direct messages
         user_tweets = twit.get_users_tweets(username=user["username"])
         users_stats = twit.format_ratio_tweets(user_tweets=user_tweets)
         message = responding_comment(
@@ -38,19 +36,17 @@ def init():
         twit.send_dm(user_id=user["user_to_dm"], message=message)
         return
 
+    # responds to a mention in a comment section
+    # grabs the user that was mentioned / stats to be checked
     user_to_check = user["data"]["user_to_check"]
     users_tweets = twit.get_users_tweets(username=user_to_check)
     stats = twit.format_ratio_tweets(user_tweets=users_tweets)
     response = responding_comment(user_to_check=user_to_check, ratio_stats_list=stats)
-    print(response)
-
+    # sends a comment reply to the user that mentioned the bot
     twit.send_reply(tweet_id=user["id"], reply_message=response)
-    # print("a reply was sent!!!!!!!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<")
 
 
+# runs bot every 2 minutes
 while True:
-    print("before init")
     init()
-    print("init was fired off")
     time.sleep(120)
-    print("after sleep")

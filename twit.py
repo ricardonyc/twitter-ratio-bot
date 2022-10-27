@@ -23,6 +23,7 @@ class Twit:
             "access_token_secret": access_token_secret,
         }
 
+    # uses API key and ACCESS TOKEN to initialize bot
     def authenticate_tweepy(self):
         keys = self.__get_api_key()
         tokens = self.__get_access_token()
@@ -30,22 +31,26 @@ class Twit:
         auth.set_access_token(tokens["access_token"], tokens["access_token_secret"])
         return tweepy.API(auth, wait_on_rate_limit=True)
 
+    # grabs first mention from notifications
     def recent_mention(self):
         recent_mention = self.api.mentions_timeline(count=1)
         return recent_mention[0]
 
+    # grabs last 15 mentions
     def last_15_mentions(self):
         return self.api.mentions_timeline(count=15)
 
     def get_mentioned_in_tweet(self):
         user = self.recent_mention()
         user_mentioning_bot = user.user.screen_name
-        # print("USER: ", user.__dict__.keys())
+        # makes sure user mentioning bot follows the bot
         follows_you = self.check_if_follows(username=user_mentioning_bot)["follows_you"]
         if not follows_you:
             return {"follows_you": follows_you, "message": False}
+
         hashtags = [hashtag["text"].lower() for hashtag in user.entities["hashtags"]]
         users_list = user.entities["user_mentions"]
+        # makes sure the first mentioned account is the bot and the user used the special hashtag
         if users_list[0]["screen_name"] == "ratiocheck" and "myratiostats" in hashtags:
             return {
                 "id": user.user.id,
@@ -55,6 +60,7 @@ class Twit:
                 "username": user.user.screen_name,
                 "message": True,
             }
+        # set up info for bot to respond to a mention in a comment section
         elif users_list[0]["screen_name"] != "ratiocheck":
             return {
                 "id": user.id,
@@ -71,6 +77,7 @@ class Twit:
         else:
             return {"message": False}
 
+    # gets 5000 of the users most recent tweets
     def get_users_tweets(self, username):
         limit = 5000
         return tweepy.Cursor(
@@ -87,6 +94,7 @@ class Twit:
         except:
             return {"success": False, "data": ""}
 
+    # check if user that mentioned bot follows the bot
     def check_if_follows(self, username):
         follows_data = self.api.get_friendship(target_screen_name=username)
         return {
@@ -94,11 +102,12 @@ class Twit:
             "follows_you": follows_data[0].followed_by,
         }
 
+    # sends user a reply through direct message
     def send_dm(self, user_id, message):
         return self.api.send_direct_message(recipient_id=user_id, text=message)
 
+    # formats a users tweets to calculate ratio
     def format_ratio_tweets(self, user_tweets):
-
         tweets = []
 
         for tweet in user_tweets:
@@ -136,6 +145,7 @@ class Twit:
         month = int(date[1]) - 1
         return f"{months[month]} {date[-1]}, {date[0]}"
 
+    #
     def get_ratio_stats(self, tweets_array):
         stats = []
 
