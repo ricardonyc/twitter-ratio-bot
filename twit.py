@@ -23,7 +23,6 @@ class Twit:
             "access_token_secret": access_token_secret,
         }
 
-    # uses API key and ACCESS TOKEN to initialize bot
     def authenticate_tweepy(self):
         keys = self.__get_api_key()
         tokens = self.__get_access_token()
